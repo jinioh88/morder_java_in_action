@@ -126,6 +126,10 @@
   - 익명 클래스는 좋았지만 여전히 많은 공간을 차지한다.
 - 여섯 번째 시도: 람다 표현식 사용
   ```java
+    List<Apple> redApples = apple.filterApples(inventory, (Apple a) -> Color.RED.equals(a.getColor()));
+  ```
+- 일곱 번째 시도: 리스트 형식으로 추상화
+  ```java
     
   ```
   

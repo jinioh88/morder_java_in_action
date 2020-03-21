@@ -8,11 +8,6 @@ public class Main {
         Apple apple = new Apple();
         List<Apple> inventory = new ArrayList<>();
 
-        List<Apple> redApples = apple.filterApples(inventory, new ApplePredicate() {
-            @Override
-            public boolean test(Apple apple) {
-                return Color.RED.equals(apple.getColor());
-            }
-        });
+        List<Apple> redApples = apple.filterApples(inventory, (Apple a) -> Color.RED.equals(a.getColor()));
     }
 }

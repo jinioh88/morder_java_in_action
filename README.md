@@ -115,7 +115,19 @@
 - 앞선 방법은 여러 filter 조건을 구현하는 클래스를 정의한 다음 인스턴스화 해야 하는 번거로움이 있다. 
 - 자바의 익명 클래스를 이용해 코드의 양을 줄일 수 있지만 익명 클래스가 모든걸 해결하는 것은 아니다. 
 - 다섯 번째 시도: 익명 클래스 사용
-  - 
+  ```java
+    List<Apple> redApples = apple.filterApples(inventory, new ApplePredicate() {
+                @Override
+                public boolean test(Apple apple) {
+                    return Color.RED.equals(apple.getColor());
+                }
+    });
+  ```
+  - 익명 클래스는 좋았지만 여전히 많은 공간을 차지한다.
+- 여섯 번째 시도: 람다 표현식 사용
+  ```java
+    
+  ```
   
 
 

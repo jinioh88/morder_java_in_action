@@ -130,8 +130,26 @@
   ```
 - 일곱 번째 시도: 리스트 형식으로 추상화
   ```java
-    
+    public <T> List<T> filter(List<T> list, Predicate<T> p) {
+            List<T> result = new ArrayList<>();
+            for(T e : list) {
+                if(p.test(e)) {
+                    result.add(e);
+                }
+            }
+            return result;
+  }
   ```
+  - 이렇게 하면 사과든 오렌지든 다 받아들일 수 있다.
   
+4. 실전 예제
+- Comparator로 정렬하기
+  - 개발자에게 변화하는 요구사항에 쉽게 대응 할 수 있는 정렬 동작을 수행할 수 있는 코드가 절실하다. 
+  - List에 sort 메서드가 있는데, Comparator 객체를 이용해 sort 동작을 파라미터화 할 수 있다. 
+  ```java
+    inventory.sort((Apple a1, Apple a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())));
+  ```
+---
+ 
 
 

@@ -2,6 +2,7 @@ package ch02;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Apple {
     private Color color;
@@ -62,4 +63,13 @@ public class Apple {
         }
     }
 
+    public <T> List<T> filter(List<T> list, Predicate<T> p) {
+        List<T> result = new ArrayList<>();
+        for(T e : list) {
+            if(p.test(e)) {
+                result.add(e);
+            }
+        }
+        return result;
+    }
 }

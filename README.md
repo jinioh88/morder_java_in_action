@@ -150,6 +150,168 @@
     inventory.sort((Apple a1, Apple a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())));
   ```
 ---
+## CH3 람다 표현식
+1. 람다란 무엇인가?
+- 람다 표현식은 메서드로 전달할 수 있는 익명 함수를 단순화한 것이다. 
+- 람다 표현식에는 이름은 없지만, 파라미터 리스트, 바디, 반환형식, 예외리스트를 가질 수 있다. 
+  ```
+    Comparator<Apple> byWeight = new Comparator<Apple>() {
+                public int compare(Apple a1, Apple a2) {
+                    return String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight()));
+                }
+  };
+  ```
+  - 위의 기존 코드를 다음과 같이 람다로 표현할 수 있다.
+  ```
+    Comparator<Apple> byWeight = (Apple a1, Apple a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight()));
+  ```
+
+2. 어디에 어떻게 람다를 사용할까?
+- 함수형 인터페이스
+  - 함수형 인터페이스는 하나의 추상 메서드를 지정하는 인터페이스다. 
+  - 인터페이스가 디폴트 메서드를 가진다고 해도 추상 메서드가 하나면 함수형 인터페이스다. 
+  - 전체 표현식을 함수형 인터페이스의 인스턴스로 취급할 수 있다. 익명 클래스로도 할 수 있다.
+    ```
+        Runnable r1 = () -> System.out.println("hello world!");
+    
+        // 익명 클래스 사용
+        Runnable r1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("hello world");
+                    }
+        };
+    ``` 
+- 함수 디스크립터
+  - 람다 표현식의 시그니처를 서술하는 메서드를 함수 디스크립터 라고 부른다. 
+    - 예를 들어 Runnable 인터페이스는 인수와 반환값이 없으므로 인수와 반환값이 없는 시그니처로 본다.
+    - () -> void
+  - @FunctionalInterface란?
+    - 함수형 인터페이스음 가리키는 어노테이션이다. 
+
+3. 람다 활용: 실행 어라운드 패턴
+- 자원을 처리하는 코드와 같이 중복되는 준비 코드와 정리 코드가 있다면 이를 실행 어라운드 패턴이라 부른다. 
+    ```
+    public String processFile() throws IOException {
+        try(BufferedReader br = new BufferedReader(new FileReader("data.txt"))) {
+            return br.readLine(); // 실제 필요한 작업을 수행.  나머지는 작업마다 중복되는 코드
+        }
+    }
+    ```
+- 1단계: 동작 파라미터화를 기억하라
+  - 기존 위 코드는 한 줄만 읽을 수 있다. 요구 사항이 바뀐다면 어떻게 해야 할까?
+  - 기존의 설정, 정리 과정은 재사용하고 processFile 메서드만 다른 동작을 수행하도록 명령하면 좋을 것이다. 
+  - processFile의 동작을 파라미터화 하면 된다. 
+  - 람다를 이용해 전달하면 된다.
+- 2단계: 함수형 인터페이스를 이용해 동작 전달
+  - 함수형 인터페이스 자리에 람다를 사용할 수 있다.
+  ```
+  @FunctionalInterface
+  public interface BufferedReaderProcessor {
+      String process(BufferedReader b) throws IOException;
+  }
+  ```
+- 3단계: 동작실행
+  - process 메서드의 시그니처(BufferedReader -> String)와 일치하는 람다를 전달 할 수 있다.
+  ```
+  public static String processFile(BufferedReaderProcessor p) throws IOException {
+          try(BufferedReader br = new BufferedReader(new FileReader("data.txt"))) {
+              return p.process(br);
+          }
+  }
+  ```
+- 4단계: 람다 전달
+  ```
+  String result = processFile((BufferedReader br) -> br.readLine() + br.readLine());
+  String result2 = processFile((BufferedReader br) -> br.readLine());
+  ```
+
+4. 함수형 인터페이스 사용
+- 함수형 인터페이스의 추상 메서드 시그니처를 함수 디스크립터라고 한다. 
+- 자바 8 라이브러리 설계자들은 java.util.function 패키지로 여러 가지 새로운 함수형 인터페이스를 제공한다. 
+- Predicate
+  - test라는 추상 메서드를 정의하며 제네릭 T의 객체를 인수로 받아 불리언을 반환한다. 
+  ```
+  public <T> List<T> filter(List<T> list, Predicate<T> p) {
+          List<T> results = new ArrayList<>();
+          for(T t : list) {
+              if(p.test(t)) {
+                  results.add(t);
+              }
+          }
+          return results;
+  }
+  
+  Predicate<String> nonEmptyStringPredicate = (String s) -> !s.isEmpty();
+  List<String> nonEmpty = filter(listOfStrings, nonEmptyStringPredicate);
+  ```
+- Consumer
+  - 제네릭 T 객체를 받아 void를 반환하는 accept 추상 메서드를 정의한다. 
+  ```
+  public <T> void forEach(List<T> list, Consumer<T> c) {
+      for(T t : list) {
+          c.accept(t);
+      }
+  }
+  
+  forEach(Arrays.asList(1, 2, 3, 4, 5), (Integer i) -> System.out.println(i));
+  ```
+- Function
+  - 제네릭 T를 인수로 받아 제네릭 형식 R 객체를 반환하는 apply를 정의한다. 
+  - 입력을 출력으로 매핑하는 람다를 정의할 때 Function 인터페이스를 활용할 수 있다. 
+  ```
+  public <T, R> List<R> map(List<T> list, Function<T, R> f) {
+      List<R> result = new ArrayList<>();
+      for(T t : list) {
+          result.add(f.apply(t));
+      }
+      return result;
+  }
+  
+  List<Integer> l= map(Arrays.asList("lambdas", "in", "action"), (String s) -> s.length());
+  ```
+- 기본형 특화
+  - 제네릭 파라미터에는 참조형만 사용할 수 있다. 
+  - 자바에서 오토박싱이 존재하는데, 이런 변환 과정은 비용이 소모된다. 박싱한 값은 기본형을 감싸는 래퍼며 힙에 저장된다.
+  - 박싱한 값은 메모리를 더 소비하여 기본형을 가져올 때도 메모리를 탐색하는 과정이 필요하다. 
+  - 자바8 에서는 IntPredicate와 같이 오토박싱을 피하기 위한 특별한 함수형 인터페이스를 제공한다. 
+  ```
+  IntPredicate evenNumbers = (int i) -> i % 2 == 0; // Integer가 아닌 int다.
+  evenNumbers.test(1000); 
+  ``` 
+
+5. 형식검사, 형식 추론, 제약
+
+람다 표현식 자체에는 람다가 어떤 함수형 인터페이스를 구현하는지의 정보가 포함되어 있지 않다. 따라서 람다 표현식을 더 제대로 이해하려면 람다의 실제 형식을 파악해야 한다. 
+- 형식 검사
+  - 람다가 사용되는 컨텍스트를 이용해 람다의 형식을 추론할 수 있다. 
+  - 어떤 컨텍스트에서 기대되는 람다 표현식의 형식을 대상형식 이라고 부른다. 
+- 같은 람다, 다른 함수형 인터페이스
+  - 대상 형식이라는 특징 때문에 같은 람다 표현식이더라도 호환되는 추상 메서드를 가진 다른 함수형 인터페이스로 사용 될 수 있다. 
+  ```
+  Callable<Integer> c = () -> 42;
+  PrivilegedAction<Integer> p = () -> 42;
+  ```
+- 형식 추론
+  - 자바 컴파일러는 람다 표현식이 사용된 컨텍스트를 이용해 람다 표현식과 관련된 함수형 인터페이스를 추론한다. 
+  ```
+  Comparator<Apple> c1 = (Apple a1, Apple a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())); // 형식 추론 안함
+  Comparator<Apple> c2 = (a1, a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())); // 형식 추론
+  ```
+  
+- 지역 변수 사용
+  - 람다에서는 자유변수(파라미터로 넘겨진 변수가 아닌 외부에서 정의된 변수)를 활용할 수 있다.
+  - 이 동작을 람다 캡처링 이라 부른다. 
+  - 이 경우 약간의 제약이 있는데, 지역 변수는 명시적으로 final로 선언되어 있어야 하거나 실질적으로 final로 선언된 변수와 똑같이 사용되야 한다. 
+  
+6. 메서드 참조
+- 메서드 참조를 이용하면 기존의 메서드 정의를 재활용해 람다처럼 전달 할 수 있다. 
+- 때론 람다 표현식보다 메서드 참조를 사용하는 것이 더 가독성이 좋고 자연스러울 수 있다. 
+```
+inventory.sort(Comparator.comparing(Apple::getWeight));
+```
+- 요약
+
  
 
 

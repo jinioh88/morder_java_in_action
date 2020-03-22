@@ -324,7 +324,64 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
   Supplier<Apple> cc2 = Apple::new;
   ```
   
+7. 람다, 메서드 참조 활용하기
+- 1단계: 코드 전달
+  - List의 sort메서드는 void sort(Comparator<? super E> c) 형식으로 되어있어 동작 파라미터화 됬다고 볼수 있다.
+  - sort의 전략을 전달하면 sort의 동작이 달라진다.
+  ```
+  public class AppleComparator implements Comparator<Apple> {
+      @Override
+      public int compare(Apple a1, Apple a2) {
+          return String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight()));
+      }
+  }
+  
+  inventory.sort(new AppleComparator());
+  ```
+- 2단계: 익명 클래스 사용
+  - 위의 코드 보다는 익명 클래스를 이용하는게 좋다.
+  ```
+  inventory.sort(new Comparator<Apple>() {
+      @Override
+      public int compare(Apple a1, Apple a2) {
+          return String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight()));
+      }
+  });
+  ```
+  
+- 3단계: 람다 표현식 사용
+  ```
+  inventory.sort((Apple a1, Apple a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())));
+  
+  // 형식추론
+  inventory.sort((a1, a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())));
+  
+  inventory.sort(Comparator.comparing(app -> app.getWeight()));
+  ``` 
+  
+- 4단계: 메서드 참조 사용
+  ```
+  inventory.sort(Comparator.comparing(Apple::getWeight));
+  ```
+  - 마지막 과정은 앞전것 보다 코드도 짧아졌고 의미도 명확해졌다. 
 
- 
+- 람다 표현식을 조합할 수 있는 유용한 메서드
+  - Comparator 조합
+    - 역정렬
+    ```
+    // 역정렬하는 Comparator 인스턴스를 만들 필요가 없다.
+    inventory.sort(Comparator.comparing(Apple::getWeight).reversed());
+    ```
+    - Comparator 연결
+    ```
+    // 같은 무게의 사과를 한번 더 비교하고 싶다. 
+    inventory.sort(Comparator.comparing(Apple::getWeight).reversed().thenComparing(Apple::getColor));
+    ```
+  - Predicate 조합
+    - negate, and, or 세 가지 메서드를 제공한다. 
+  - Function 조합
+    - Function 인스턴스를 반환하는 andThen, compose 두 가지를 제공한다. 
+    - f.andThen(g)는 g(f(x))가 되고 f.compose(g)는 f(g(x))가 된다. 
+  
 
 

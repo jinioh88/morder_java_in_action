@@ -44,7 +44,10 @@ public class Main {
         BiPredicate<List<String>, String> contains = List::contains;
 
         Supplier<Apple> cc = () -> new Apple();
-        Supplier<Apple> cc2 = Apple::new;
+
+        inventory.sort(Comparator.comparing(Apple::getWeight).reversed().thenComparing(Apple::getColor));
+
+
     }
 
     public static <T, R> List<R> map(List<T> list, Function<T, R> f) {

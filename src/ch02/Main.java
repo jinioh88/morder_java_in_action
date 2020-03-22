@@ -11,10 +11,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.IntPredicate;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -43,6 +40,11 @@ public class Main {
         Comparator<Apple> c1 = (Apple a1, Apple a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())); // 형식 추론 안함
         Comparator<Apple> c2 = (a1, a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())); // 형식 추론
 
+        ToIntFunction<String> stringToInt = Integer::parseInt;
+        BiPredicate<List<String>, String> contains = List::contains;
+
+        Supplier<Apple> cc = () -> new Apple();
+        Supplier<Apple> cc2 = Apple::new;
     }
 
     public static <T, R> List<R> map(List<T> list, Function<T, R> f) {

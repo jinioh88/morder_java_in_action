@@ -11,7 +11,7 @@
 
 1. 변화하는 요구사항에 대응하기
     - 첫 번째 시도: 녹색 사과 필터링
-    ```java
+    ```
     public List<Apple> filterGreenApples(List<Apple> inventory) {
             List<Apple> result = new ArrayList<>();
             for(Apple apple : inventory) {
@@ -26,7 +26,7 @@
       
     - 두 번째 시도: 색을 파라미터화
       - 색을 파라미터화할 수 있도록 메서드에 파라미터를 추가하면 변화하는 요구사항에 좀 더 유연하게 대응하는 코드를 만들 수 있다. 
-    ```java
+    ```
     public List<Apple> filterAppleByColor(List<Apple> inventory, Color color) {
             List<Apple> result = new ArrayList<>();
             for(Apple apple : inventory) {
@@ -38,7 +38,7 @@
     }
     ```  
       - 조금 편해진 함수가 나왔는데, 농부가 갑자기 '색 이외에도 무게를 구분할 수 있었으면한다...'
-    ```java
+    ```
     public List<Apple> filterAppleByWeight(List<Apple> inventory, int weight) {
             List<Apple> result = new ArrayList<>();
             for(Apple apple : inventory) {
@@ -55,7 +55,7 @@
       
     - 세 번째 시도: 가능한 모든 속성으로 필터링
       - 다음은 하지말아야 할 짓을 할 코드로 모든 속송을 파라미터로 다 때려 박은 것이다.
-    ```java
+    ```
     public List<Apple> filterApples(List<Apple> inventory, Color color, int weight, boolean flag) {
             List<Apple> result = new ArrayList<>();
             for(Apple apple : inventory) {
@@ -94,7 +94,7 @@
   - 이렇게 동작 파라미터화, 즉 메서드가 다양한 동작을 받아 내부적으로 다양한 동작을 수행할 수 있다 
   
   - 네 번째 시도: 추상적 조건으로 필터링
-      ```java
+      ```
         public List<Apple> filterApples(List<Apple> inventory, ApplePredicate p) {
                 List<Apple> result = new ArrayList<>();
                 for(Apple apple : inventory) {
@@ -115,7 +115,7 @@
 - 앞선 방법은 여러 filter 조건을 구현하는 클래스를 정의한 다음 인스턴스화 해야 하는 번거로움이 있다. 
 - 자바의 익명 클래스를 이용해 코드의 양을 줄일 수 있지만 익명 클래스가 모든걸 해결하는 것은 아니다. 
 - 다섯 번째 시도: 익명 클래스 사용
-  ```java
+  ```
     List<Apple> redApples = apple.filterApples(inventory, new ApplePredicate() {
                 @Override
                 public boolean test(Apple apple) {
@@ -125,11 +125,11 @@
   ```
   - 익명 클래스는 좋았지만 여전히 많은 공간을 차지한다.
 - 여섯 번째 시도: 람다 표현식 사용
-  ```java
+  ```
     List<Apple> redApples = apple.filterApples(inventory, (Apple a) -> Color.RED.equals(a.getColor()));
   ```
 - 일곱 번째 시도: 리스트 형식으로 추상화
-  ```java
+  ```
     public <T> List<T> filter(List<T> list, Predicate<T> p) {
             List<T> result = new ArrayList<>();
             for(T e : list) {
@@ -146,7 +146,7 @@
 - Comparator로 정렬하기
   - 개발자에게 변화하는 요구사항에 쉽게 대응 할 수 있는 정렬 동작을 수행할 수 있는 코드가 절실하다. 
   - List에 sort 메서드가 있는데, Comparator 객체를 이용해 sort 동작을 파라미터화 할 수 있다. 
-  ```java
+  ```
     inventory.sort((Apple a1, Apple a2) -> String.valueOf(a1.getWeight()).compareTo(String.valueOf(a2.getWeight())));
   ```
 ---

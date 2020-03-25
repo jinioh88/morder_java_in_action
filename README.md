@@ -405,5 +405,33 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
   - map : 한 요소를 다른 요소로 변환하거나 정보를 추출한다. 
   - limit : 스트림 크기를 축소한다. 
   - collect : 스트림을 다른 형식으로 변환한다.
-
+  
+3. 스트림과 컬렉션
+- 딱 한 번만 탐색할 수 있다. 
+  - 탐색된 스트림의 요소는 소비된다. 
+  - 반복자와 마찬가지로 한 번 탐색한 요소를 다시 탐색하려면 초기 데이터 소스에서 새로운 스트림을 만들ㄹ어야 한다.
+- 외부 반복과 내부 반복
+  - 외부 반복은 사용자가 직접 요소를 반복해야 한다. 
+  - 반면 스트림은 반복을 알아서 처리하고 결과를 어딘가 저장해주는 내부반복을 사용한다. 
+  ```
+    List<String> names = new ArrayList<>();
+    for(Dish dish : menu) {
+        names.add(dish.getName());
+    }
+    
+    // 내부적으로 숨겨진 외부 반복
+    Iterator<Dish> iterator = menu.iterator();
+    while (iterator.hasNext()) {
+        Dish dish = iterator.next();
+        names.add(dish.getName());
+    }
+    
+    // 내부반복
+    List<String> nameStream =  menu.stream().map(Dish::getName).collect(Collectors.toList());  
+  ```
+  - 내부 반복을 사용하면 투명하게 병렬로 처리하거나 더 최적화된 다양한 순서로 처리할 수 있다. 
+  ```
+    // 퀴즈 문제
+    List<Dish> highCaloriecDishes = menu.stream().filter(m -> m.getCalories() > 300).collect(Collectors.toList());
+  ```
 

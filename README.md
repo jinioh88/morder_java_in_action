@@ -383,5 +383,13 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
     - Function 인스턴스를 반환하는 andThen, compose 두 가지를 제공한다. 
     - f.andThen(g)는 g(f(x))가 되고 f.compose(g)는 f(g(x))가 된다. 
   
+---
+# Part2 함수형 데이터 처리
+## 스트림 소개
+1. 스트림이란 무엇인가?
+- 스트림을 이용하면 선언형으로 컬렉션 데이터를 처리할 수 있다. 
+- 스트림은 다음의 다양한 이득을 준다. 
+  - 선언형으로 코드를 구현할 수 있다. 
+  - filter, sorted, map, collect 같은 여러 빌딩 블록 연산을 연결해 복잡한 데이터 처리 파이프라인을 만들 수 있다. 
 
 

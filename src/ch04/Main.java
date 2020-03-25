@@ -36,13 +36,6 @@ public class Main {
         // 내부반복
         List<String> nameStream =  menu.stream().map(Dish::getName).collect(Collectors.toList());
 
-        List<Dish> highCaloriecDishes = menu.stream().filter(m -> m.getCalories() > 300).collect(Collectors.toList());
-        Iterator<Dish> iterator1 = menu.iterator();
-        while(iterator1.hasNext()) {
-            Dish dish = iterator.next();
-            if(dish.getCalories() > 300) {
-                highCaloriecDishes.add(dish);
-            }
-        }
+
     }
 }

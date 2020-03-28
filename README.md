@@ -583,5 +583,32 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
   - range 메서드는 시작값과 종료값이 결과에 포함되지 않는다. 
 
 8. 스트림 만들기
-
+- 값으로 스트림 만들기
+  - 임의의 수를 인수로 받는 정적 메서드 Stream.of를 이용해 스트림을 만들 수 있다. 
+  - empty로 스트림을 비울 수 있다. 
+  ```
+  Stream<String> strStream = Stream.of("Mordern", "Java", "In", "Action");
+  ```
+- null이 될 수 있는 객체로 스트림 만들기
+  - Stream.ofNullable로 null이 될 수 있는 객체를 스트림으로 만들 수 있다. 
+  - 위를 사용안하면 null인지 아닌지 판별하는 코드가 들어가야 한다. 
+- 배열로 스트림 만들기
+  - Arrays.stream으로 만들 수 있다. 
+- 파일로 스트림 만들기
+  - Files.lines는 주어진 파일의 행 스트림을 문자열로 반환한다. 
+  - Stream 인터페이스는 AutoCloseable 인터페이스를 구현한다. 
+- 함수로 무한 스트림 만들기
+  - 보통 무한한 값을 출력하지 않도록 limit(n) 함수를 함께 연결해 사용한다. 
+  - iterate 메서드
+    - 초깃값과 람다를 인수로 받아 새루운 값을 끊임 없이 생산할 수 있다. 
+    - 일반적으로 연속된 일련의 값을 만들 때는 iteratre를 사용한다. 
+    ```
+    Stream.iterate(0, i -> i + 2).limit(10).forEach(System.out::println);
+    ```
+    - 자바 9의 iterate 메서드는 프레디케이트를 지원한다. 두번째 인수로 지정하면 된다. 
+  - generate 메서드
+    - 생상된 각 값을 연속적으로 계산하지 않는다. 
+    ```
+    Stream.generate(Math::random).limit(5).forEach(System.out::println);        
+    ```
   

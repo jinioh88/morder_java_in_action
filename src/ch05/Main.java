@@ -55,5 +55,11 @@ public class Main {
 
         OptionalInt maxCalories = menu.stream().mapToInt(Dish::getCalories).max();
         int max1 = maxCalories.orElse(1);  // 값이 없을때 기본값 명시
+
+        Stream<String> strStream = Stream.of("Mordern", "Java", "In", "Action");
+
+        Stream.iterate(0, i -> i + 2).limit(10).forEach(System.out::println);
+
+        Stream.generate(Math::random).limit(5).forEach(System.out::println);
     }
 }

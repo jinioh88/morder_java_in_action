@@ -446,5 +446,47 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
   - 스트림 이용 과정은 다음과 같이 세 가지로 요약할 수 있다. 
     - 질의를 수행할 데이터 소스
     - 스트림 파이프라인을 구성할 중간 연산 연결
-    - 스트림 파이프라인을 실행하고 결과를 만들 최종 연산ㅎ
+    - 스트림 파이프라인을 실행하고 결과를 만들 최종 연산
+    
+---
+## 스트림 활용
+1. 필터링
+- 프레이케이트로 필터링
+  - filter 메서드는 프레디케이트를 인수로 받아 프레디게이트와 일치하는 모든 요소를 포함하는 스트림을 반환한다. 
+  ```
+  List<Dish> vegetarianMenu = menu.stream().filter(Dish::isVegetarian).collect(Collectors.toList());
+  ```
+- 고유 요소 필터링
+  - distinct로 고유 요소로 이뤄진 스트림을 반환할 수 있다. 
+  ```
+  List<Integer> numbers = Arrays.asList(1, 2, 1, 3, 3, 2, 4);
+  numbers.stream().filter(i -> i%2 == 0).distinct().collect(Collectors.toList());
+  ```
+  
+2. 스트림 슬라이싱
+- 프레디케이트를 이용한 슬라이싱
+  - TAKEWHILE 활용
+    - 320칼로리 이하의 요리를 선택할 수 있는 방법은 뭐가 있을까?
+    - filter 연산으로 전체 스트림을 반복하면서 각 요소에 프레디케이트를 적용하면 된다. 
+    - 리스트가 이미 정렬 되 있다면 320 칼로리보다 크거나 같은 요리가 나왔을 때 내부 반복을 중단할 수 있다. 
+    - takeWhile 연산을 이용하면 무한 스트림을 포함한 모든 스트림에 프레디켕트를 적용해 스트림을 슬라이할 수 있다.  
+    ```
+    List<Dish> sliceMenu1 = menu.stream().takeWhile(dish -> dish.getCalories() < 320).collect(Collectors.toList());
+    ```
+  - DROPWHILE 활용
+    - 나머지 요소를 선택하려 할 때 사용한다. 
+    - takeWhile과 정 반대의 작업을 한다. 
+    - dropWhile은 처음으로 거짓이 되는 지점까지 발견된 요소를 버린다. 
+    - 프레디케이트가 거짓이되면 그 지점까지 잡업을 중단하고 남은 모든 요소를 반환한다. 
+- 스트림 축소
+  - limit(n)으로 주어진 값 이하의 크기를 갖는 새로운 스트림을 반환한다.
+  ```
+  List<Dish> vegetarianMenu = menu.stream().filter(Dish::isVegetarian).limit(3).collect(Collectors.toList());
+  ``` 
+- 요소 건너뛰기
+  - skip(n)으로 처음 n개 요소를 제외한 스트림을 반환할 수 있다. 
+  - limit(n)과 skip(n)은 상호 보완적인 연산을 수행한다. 
+  
+
+  
 

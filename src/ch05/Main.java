@@ -7,7 +7,9 @@ import javax.swing.text.html.Option;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Main {
@@ -47,5 +49,11 @@ public class Main {
         Optional<Integer> min = numbers.stream().reduce(Integer::min);
 
         long count = menu.stream().count();
+
+        IntStream intStream = menu.stream().mapToInt(Dish::getCalories);
+        Stream<Integer> stream = intStream.boxed();
+
+        OptionalInt maxCalories = menu.stream().mapToInt(Dish::getCalories).max();
+        int max1 = maxCalories.orElse(1);  // 값이 없을때 기본값 명시
     }
 }

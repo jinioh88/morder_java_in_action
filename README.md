@@ -555,4 +555,33 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
   Optional<Integer> min = numbers.stream().reduce(Integer::min);
   ```
   
+7. 숫자형 스트림
+- 기본형 특화 스트림
+  - 스트림 API는 박싱 비용을 피할 수 있도록 IntStream, DoubleStream, LongStream을 제공한다. 
+  - 자주 사용하는 숫자 관련 리듀싱 연산 수행 메서드를 제공한다. 
+  - 박싱 과정에서 일어나는 효율성과 관련만 있고, 추가 기능은 없다. 
+  - 숫사 스트림으로 매핑
+    - mapToInt, mapToDouble, mapToLong을 가장 많이 사용한다. 
+    ```
+    int cal = menu.stream().mapToInt(Dish::getCalories).sum();
+    ```
+  - 객체 스트림으로 복원하기
+    - boxed를 이용해 특화 스트림을 일반 스트림으로 변환할 수 있다. 
+    ```
+    IntStream intStream = menu.stream().mapToInt(Dish::getCalories);
+    Stream<Integer> stream = intStream.boxed();
+    ```
+  - 기본값: OptionalInt
+    - IntStream의 기본값은 0이다. 스트림 요소가 없을 때 실제 최댓값이 0이 되 버릴 수 있다.
+    - OptionalInt, OptionalDouble, OptionalLong 으로 기본 값을 설정할 수 있다. 
+    ```
+    OptionalInt maxCalories = menu.stream().mapToInt(Dish::getCalories).max();
+    int max1 = maxCalories.orElse(1);  // 값이 없을때 기본값 명시
+    ```
+- 숫자 범위
+  - IntStream과 LongStream에서 range와 rangeClosed라는 두 가지 정적 메서드를 제공한다. 
+  - range 메서드는 시작값과 종료값이 결과에 포함되지 않는다. 
+
+8. 스트림 만들기
+
   

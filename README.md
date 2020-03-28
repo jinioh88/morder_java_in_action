@@ -487,6 +487,27 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
   - skip(n)으로 처음 n개 요소를 제외한 스트림을 반환할 수 있다. 
   - limit(n)과 skip(n)은 상호 보완적인 연산을 수행한다. 
   
-
+3. 매핑
+- 스트림의 각 요소에 함수 적용하기
+  - 스트림은 함수를 인수로 받는 map 메서드를 지원한다. 
+  - 이 함수는 각 요소에 적용되며 함수를 적용한 결과가 새로운 요소로 매핑된다. 
+  - 요리명으로 추출하는 코드
+  ```
+  List<String> dishNames = menu.stream().map(Dish::getName).collect(Collectors.toList());
+  ```
+  - 요리명의 길이를 알고 싶다면?
+  ```
+  List<Integer> dishNames = menu.stream().map(d -> d.getName().length()).collect(Collectors.toList());
+  
+  // 책은 다음과 같이 나옴(위처럼 하는거랑 다른건가?)
+  List<Integer> dishNames = menu.stream().map(Dish::getName).map(String::length).collect(Collectors.toList());
+  ```
+- 스트림 평면화
+  - flatMap 사용
+    - flatMap은 map(Arrays::stream)과 달리 하나의 평면화된 스트림을 반환한다. 
+    ```
+    List<String> uniqueChars = words.stream().map(word -> word.split("")).flatMap(Arrays::stream).distinct().collect(Collectors.toList());
+    ```
+    - 즉 flatMap은 스트림의 각 값을 다른 스트림으로 만든 다음 모든 스트림을 하나의 스트림으로 온결한다. 
   
 

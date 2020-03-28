@@ -1,10 +1,12 @@
 package ch05;
 
 import ch04.Dish;
+import org.w3c.dom.ls.LSOutput;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,5 +31,9 @@ public class Main {
         List<Dish> meatMenu =
                 menu.stream().filter(d -> d.getType() == (Dish.Type.MEAT)).limit(3).collect(Collectors.toList());
 
+        List<Integer> dishNames = menu.stream().map(Dish::getName).map(String::length).collect(Collectors.toList());
+
+        List<String> words = Arrays.asList("Morern", "Java", "In", "Action");
+        List<String> uniqueChars = words.stream().map(word -> word.split("")).flatMap(Arrays::stream).distinct().collect(Collectors.toList());
     }
 }

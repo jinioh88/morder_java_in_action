@@ -611,4 +611,112 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
     ```
     Stream.generate(Math::random).limit(5).forEach(System.out::println);        
     ```
+
+---
+## 스트림으로 데이터 수집
+collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최종 결과로 도출하는 리듀싱 연산을 수행할 수 있다.
+
+1. 컬렉터란 무엇인가?
+- Collector 인터페이스 구현은 스트림의 요소를 어떤 식으로 도출할지 지정한다. 
+- 고급 리듀싱 기능을 수행하는 컬렉터
+  - 스트림에 collect를 호출하면 스트림의 요소에 리듀싱 연산이 수행된다. 
+  - collect에서는 리듀싱 연산을 이용해 스트림의 각 요소를 방문하면서 컬렉터가 작업을 처리한다. 
+- 미리 정의된 컬렉터
+  - 크게 3가지로 구분된다. 
+    - 스트림 요소를 하나의 값으로 리듀스하고 요약
+    - 요소 그룹화
+    - 요소 분할
+
+2. 리듀싱과 요약
+- 스트림 값에서 최댓값과 최솟값 검색
+  - maxBy, minBy 두 메서드를 이용하는데, 인수로 Comparator를 받는다. 
+  ```
+  Comparator<Dish> dishCaloriesComparator = Comparator.comparingInt(Dish::getCalories);
+  Optional<Dish> mostCaloreisDish = menu.stream().collect(maxBy(dishCaloriesComparator));
+  ``` 
+  - 스트림에는 객체의 숫자 필드의 합계나 평균등 반환 연산도 자주 사용된다. 이 연산을 요약이라 한다. 
+- 요약 연산
+  - Collectors.summingInt라는 특별한 요약 메서드가 있다. 
+  - summingInt의 인수로 전달된 함수는 객체를 int로 매핑한 컬렉터를 반환한다. 
+  - collect 메서드로 전달되면 요약 작업을 수행한다. 
+  ```
+  int totalCalories = menu.stream().collect(summingInt(Dish::getCalories));
+  ```
+  - summarizingInt는 요수 수, 합계, 평균, 최댓값, 최솟값 등을 추려낸다. 
+- 문자열 연결
+  - joining 메서드를 이용하면 스트림의 각 객체에 toString 메서드를 호출해 추출한 모든 문자열을 하나의 문자열로 연결한다. 
+  - 내부적으로 StringBuilder를 이용해 문자열을 하나로 만든다. 
+  - 연결된 두 요소 사이에 구분문자열을 넣을 수 있는 오버로디된 joining도 있다. 
+  ```
+  String shortMenu = menu.stream().map(Dish::getName).collect(Collectors.joining(","));
+  ```
+ - 범용 리듀싱 요약 연산 
+   - 범용 Collectors.reducing으로 위에서 했던 작업들을 할 수 있다. 
+   - 그냥 reducing을 사용안했던 이유는 프로그래밍적 편의성 때문이다.(가독성도 중요)
+   ```
+   int totalCalories1 = menu.stream().collect(reducing(0, Dish::getCalories, (i, j) -> j+j));
+   ```
+- 컬렉션 프레임워크의 유연성: 같은 연산도 다양한 방식으로 수행할 수 있다.
+  - reducing을 이용한 이전방식 대신 Integer 클래스의 sum을 이용하면 좀 더 단순화 할 수 있다. 
+  ```
+  int totalCalories1 = menu.stream().collect(reducing(0, Dish::getCalories, Integer::sum));
+  ```
+  - reduce 연산으로도 같은 결과를 도출할 수 있다. 
+  ```
+  int totalCalories1 = menu.stream().map(Dish::getCalories).reduce(Integer::sum).get();
+  ```
+  - 마지막으로 IntStream으로 매핑한 다음 sum 메서드로 도출할 수 도 있다. 
+- 자신의 상황에 맞는 최적의 해법 선택
+  - 스트림 인터페이스에서 직접 제공하는 메서드를 이용하는것에 비해 컬렉터를 이용하는 코드가 더 복잡하다.
+  - 하지만 재사용성과 커스터마이즈 가능성을 제공하는 높은 수준의 추상화와 일반화를 얻을 수 있다. 
   
+3. 그룹화
+- 명령형으로 그룹화를 구현하려면 까다롭다. 
+- Collectors.groupingBy를 이용하면 쉽게 그룹화할 수 있다. 
+  ```
+  Map<Dish.Type, List<Dish>> dishesByType = menu.stream().collect(groupingBy(Dish::getType));
+  ```
+  - 결과는 Map이 반환된다.
+  - 단순한 속성 접근자 대신 더 복잡한 분류 기준이 필요한 상황에선 메서드 참조를 분류 함수로 사용할 수 없다. 
+- 그룹화된 요소 조작
+  - 다음과 같은 실수를 할 수 있다.
+  ```
+  Map<Dish.Type, List<Dish>> dishesByType = menu.stream().filter(d -> d.getCalories() > 500).collect(groupingBy(Dish::getType));
+  ``` 
+  - 위의 문제는 키로 오는 Type이 빠질 수 있다는 것이다. 필터링에서 아무것도 안나와서.
+  - groupingBy 오버로드해 두 번째 인수에 프레디케이트를 이용한다. 
+  ```
+  Map<Dish.Type, List<Dish>> dishesByType = 
+      menu.stream().collect(groupingBy(Dish::getType, filtering(d -> d.getCalories() > 500, toList())));
+  ```
+  - 프레디케이트로 그룹의 요소와 필터링 된 요소를 재그룹화 한다. 비어있던 FISH 키가 등록된다. 
+  - 그룹화된 항목을 조작하는 다른 유용한 기능으로 매핑 함수를 이용해 요소를 변환하는 작업이다.
+    - mapping 메서드를 이용하면 된다. 
+    ```
+    Map<Dish.Type, List<String>> dishNamesByType = menu.stream().collect(groupingBy(Dish::getType, mapping(Dish::getName, toList())));
+    ```
+    - 두 수준의 리스트를 한 수준으로 평면화하려면 flatMap을 수행하면 된다. 
+- 다수준의 그룹화(다시보기)
+  - Collectors.goupingBy를 이용해 항목을 다수준으로 그룹화 할 수 있다. 
+  - 바깥쪽 groupingBy 메서드에 스트림 항목을 분류할 두 번째 기준을 정의하는 내부 groupingBy를 전달해 두 수준으로 스트림의 항목을 그룹화할 수 있다. 
+- 서브그룹으로 데이터 수집
+  
+4. 분할
+- 분할 함수는 Boolean을 을 키로하는 맵을 반환한다. 
+- 그룹화 맵은 최대 두 개의 그룹으로 분류된다. 
+  ```
+  Map<Boolean, List<Dish>> patitionedMenu = menu.stream().collect(partitioningBy(Dish::isVegetarian));
+  patitionedMenu.get(true);
+  ```
+- 분할의 장점
+  - 참, 거짓 두 가지 요소의 스트림 리스트를 모두 유지 한다는 것이 장점이다. 
+  - 오버라이딩 된 메서드로 두번째 인수로 Collector를 전달 할 수 있다. 
+  ```
+  Map<Boolean, Map<Dish.Type, List<Dish>>> patitionedMenu = menu.stream().collect(partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType)));
+  ```
+  
+ 5. Collector 인터페이스(다시보기)
+ - Collector 인터페이스는 리듀싱 연산을 어떻게 구현할지 제공하는 메서드 집합으로 구성된다. 
+  
+     
+    

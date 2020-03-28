@@ -42,8 +42,10 @@ public class Main {
             System.out.println("채식 주의자");
         }
 
-        boolean isHealthy = menu.stream().allMatch(dish -> dish.getCalories() < 10000);
+        int sum = numbers.stream().reduce(0, Integer::sum);
+        Optional<Integer> max = numbers.stream().reduce(Integer::max);
+        Optional<Integer> min = numbers.stream().reduce(Integer::min);
 
-        Optional<Dish> dish1 = menu.stream().filter(Dish::isVegetarian).findAny();
+        long count = menu.stream().count();
     }
 }

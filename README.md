@@ -537,4 +537,22 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
   - findFirst 함수를 사용하면 된다. 
   - 병렬 실행에서는 첫 번째 요소를 찾기 어렵다. 그래서 반환 순서가 상관 없다면 병렬 스트림에선 제약이 적은 findAny를 사용한다. 
   
-
+5. 리듀싱
+- 스트림의 모든 요소를 반복적으로 처리하는 것을 리듀싱 연산이라 한다. 
+- 요소의 합
+  - reduce를 이용하면 애플리케이션의 반복된 패턴을 추상화 할 수 있다. 
+  ```
+  int sum = numbers.stream().reduce(0, (a, b) -> a + b);
+  
+  // 메서드 참조로 간단하게 할 수 있다.
+  int sum = numbers.stream().reduce(0, Integer::sum);
+  ```
+  - 초깃값을 받지 않은 reduce도 있다. 이땐 Optional을 반환한다. 
+- 최댓값과 최솟값
+  - 두 요소에 최댓값을 반환하는 람다만 있으면 된다. 람다 대신 메서드 참조를 사용할 수 있다. 
+  ```
+  Optional<Integer> max = numbers.stream().reduce(Integer::max);
+  Optional<Integer> min = numbers.stream().reduce(Integer::min);
+  ```
+  
+  

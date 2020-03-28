@@ -510,4 +510,31 @@ inventory.sort(Comparator.comparing(Apple::getWeight));
     ```
     - 즉 flatMap은 스트림의 각 값을 다른 스트림으로 만든 다음 모든 스트림을 하나의 스트림으로 온결한다. 
   
+4. 검색과 매핑
+- 프레디케이트가 적어도 한 요소와 일치하는지 확인
+  - anyMatch 메서드를 이용한다. 
+  - 채식 요리가 있는지 확인하려면
+  ```
+  if(menu.stream().anyMatch(Dish::isVegetarian)) {
+              System.out.println("채식 주의자");
+  }
+  ```
+- 프레디케이트가 모든 요소와 일치하는지 검사
+  - allMatch 메서드로 스트림 모든 요소가 일치하는지 검사할 수 있다. 
+  ```
+  boolean isHealthy = menu.stream().allMatch(dish -> dish.getCalories() < 10000);
+  ```
+  - nonMatch는 allMtach와 반대 연산을 수행한다. 
+  - anyMatch, allMatch, noneMatch 세메서드는 스트림 쇼트서킷 기법, 즉 &&, || 와 같은 연산을 활용한다. 
+- 요소 검색
+  - findAny 메서드는 현재 스트림에서 임의의 요소를 반환한다. 
+  - 쇼트서킷을 이용해 결과를 찾는 즉시 실행을 종료한다. 
+  ```
+  Optional<Dish> dish1 = menu.stream().filter(Dish::isVegetarian).findAny();
+  ```
+- 첫 번째 요소 찾기
+  - 논리적인 아이템 순서가 정해져 있는 스트림에서 첫 번째 요소를 찾고 싶다.
+  - findFirst 함수를 사용하면 된다. 
+  - 병렬 실행에서는 첫 번째 요소를 찾기 어렵다. 그래서 반환 순서가 상관 없다면 병렬 스트림에선 제약이 적은 findAny를 사용한다. 
+  
 

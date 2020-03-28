@@ -3,8 +3,10 @@ package ch05;
 import ch04.Dish;
 import org.w3c.dom.ls.LSOutput;
 
+import javax.swing.text.html.Option;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,5 +37,13 @@ public class Main {
 
         List<String> words = Arrays.asList("Morern", "Java", "In", "Action");
         List<String> uniqueChars = words.stream().map(word -> word.split("")).flatMap(Arrays::stream).distinct().collect(Collectors.toList());
+
+        if(menu.stream().anyMatch(Dish::isVegetarian)) {
+            System.out.println("채식 주의자");
+        }
+
+        boolean isHealthy = menu.stream().allMatch(dish -> dish.getCalories() < 10000);
+
+        Optional<Dish> dish1 = menu.stream().filter(Dish::isVegetarian).findAny();
     }
 }

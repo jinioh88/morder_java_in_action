@@ -1,35 +1,35 @@
 
-Vsquid:S18549"8Remove this useless assignment to local variable "max1".(¶ŞÜš8ˆë‘‚’.
-Zsquid:S1854/"7Remove this useless assignment to local variable "sum".(Éõ±üÿÿÿÿ8˜¢…€’.
-U
-squid:S106,"9Replace this use of System.out or System.err by a logger.(ŠÄ·e8™ëãÿ‘.
-V
-squid:S106="9Replace this use of System.out or System.err by a logger.(Â¿†Ü8Ü¾ºƒ’.
-Xsquid:UselessImportCheck"4Remove this unused import 'org.w3c.dom.ls.LSOutput'.(Ò½¾Š
-Psquid:S1481#"-Remove this unused "meatMenu" local variable.(Ø©¢°ûÿÿÿÿ8™ëãÿ‘.
-Wsquid:S18543"9Remove this useless assignment to local variable "count".(™åÃ8Îî¢€’.
 Nsquid:S1481)"0Remove this unused "uniqueChars" local variable.(¼×âº8™ëãÿ‘.
-Xsquid:S18546":Remove this useless assignment to local variable "stream".(ı¦ŠÚ8Õ¾‚’.
-[squid:S1854;"=Remove this useless assignment to local variable "strStream".(ú“Š§8ƒ’.
-Qsquid:S1481&".Remove this unused "dishNames" local variable.(±‰Üÿÿÿÿÿ8™ëãÿ‘.
-Hsquid:S14813"*Remove this unused "count" local variable.(™åÃ8Îî¢€’.
-csquid:UselessImportCheck"9Remove this unused import 'javax.swing.text.html.Option'.(¼Òì:8™ëãÿ‘.
-Vsquid:S1481"3Remove this unused "vegetarianMenu" local variable.(è§Œ½üÿÿÿÿ8™ëãÿ‘.
-Fsquid:S14811"(Remove this unused "min" local variable.(ò…™8’ª“€’.
 Gsquid:S14819")Remove this unused "max1" local variable.(¶ŞÜš8ˆë‘‚’.
 Usquid:S18541"7Remove this useless assignment to local variable "min".(ò…™8’ª“€’.
-Ksquid:S1481/"(Remove this unused "sum" local variable.(Éõ±üÿÿÿÿ8˜¢…€’.
-Msquid:S1481""/Remove this unused "sliceMenu1" local variable.(”á™ï8™ëãÿ‘.
-Zsquid:S18540"7Remove this useless assignment to local variable "max".(¬‹‰ùÿÿÿÿ8¾à’€’.
-]squid:S1854)"?Remove this useless assignment to local variable "uniqueChars".(¼×âº8¹ˆãÿ‘.
-wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•ğ€»üÿÿÿÿ
-Isquid:S14816"+Remove this unused "stream" local variable.(ı¦ŠÚ8Õ¾‚’.
-_squid:S1854#"<Remove this useless assignment to local variable "meatMenu".(Ø©¢°ûÿÿÿÿ8™ëãÿ‘.
-Psquid:S39585"2Refactor the code so this stream pipeline is used.(‘„°½8Õ¾‚’.
+Zsquid:S1854/"7Remove this useless assignment to local variable "sum".(Éõ±üÿÿÿÿ8˜¢…€’.
+Ksquid:S14810"(Remove this unused "max" local variable.(¬‹‰ùÿÿÿÿ8¾à’€’.
+Xsquid:UselessImportCheck"4Remove this unused import 'org.w3c.dom.ls.LSOutput'.(Ò½¾Š
 [
 squid:S106?"9Replace this use of System.out or System.err by a logger.(Æ¨¶ÿşÿÿÿÿ8ÆÒËƒ’.
-esquid:S1854"BRemove this useless assignment to local variable "vegetarianMenu".(è§Œ½üÿÿÿÿ8™ëãÿ‘.
-`squid:S1854&"=Remove this useless assignment to local variable "dishNames".(±‰Üÿÿÿÿÿ8™ëãÿ‘.
+csquid:UselessImportCheck"9Remove this unused import 'javax.swing.text.html.Option'.(¼Òì:8™ëãÿ‘.
+Xsquid:S18546":Remove this useless assignment to local variable "stream".(ı¦ŠÚ8Õ¾‚’.
+V
+squid:S106="9Replace this use of System.out or System.err by a logger.(Â¿†Ü8Ü¾ºƒ’.
+[squid:S1854;"=Remove this useless assignment to local variable "strStream".(ú“Š§8ƒ’.
 \squid:S1854"">Remove this useless assignment to local variable "sliceMenu1".(”á™ï8™ëãÿ‘.
-Ksquid:S14810"(Remove this unused "max" local variable.(¬‹‰ùÿÿÿÿ8¾à’€’.
+Msquid:S1481""/Remove this unused "sliceMenu1" local variable.(”á™ï8™ëãÿ‘.
+Vsquid:S1481"3Remove this unused "vegetarianMenu" local variable.(è§Œ½üÿÿÿÿ8™ëãÿ‘.
+Wsquid:S18543"9Remove this useless assignment to local variable "count".(™åÃ8Îî¢€’.
+Psquid:S39585"2Refactor the code so this stream pipeline is used.(‘„°½8Õ¾‚’.
+Fsquid:S14811"(Remove this unused "min" local variable.(ò…™8’ª“€’.
+Zsquid:S18540"7Remove this useless assignment to local variable "max".(¬‹‰ùÿÿÿÿ8¾à’€’.
+wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•ğ€»üÿÿÿÿ
+esquid:S1854"BRemove this useless assignment to local variable "vegetarianMenu".(è§Œ½üÿÿÿÿ8™ëãÿ‘.
+]squid:S1854)"?Remove this useless assignment to local variable "uniqueChars".(¼×âº8¹ˆãÿ‘.
 Lsquid:S1481;".Remove this unused "strStream" local variable.(ú“Š§8ƒ’.
+U
+squid:S106,"9Replace this use of System.out or System.err by a logger.(ŠÄ·e8™ëãÿ‘.
+Hsquid:S14813"*Remove this unused "count" local variable.(™åÃ8Îî¢€’.
+`squid:S1854&"=Remove this useless assignment to local variable "dishNames".(±‰Üÿÿÿÿÿ8™ëãÿ‘.
+Qsquid:S1481&".Remove this unused "dishNames" local variable.(±‰Üÿÿÿÿÿ8™ëãÿ‘.
+Psquid:S1481#"-Remove this unused "meatMenu" local variable.(Ø©¢°ûÿÿÿÿ8™ëãÿ‘.
+Ksquid:S1481/"(Remove this unused "sum" local variable.(Éõ±üÿÿÿÿ8˜¢…€’.
+Isquid:S14816"+Remove this unused "stream" local variable.(ı¦ŠÚ8Õ¾‚’.
+Vsquid:S18549"8Remove this useless assignment to local variable "max1".(¶ŞÜš8ˆë‘‚’.
+_squid:S1854#"<Remove this useless assignment to local variable "meatMenu".(Ø©¢°ûÿÿÿÿ8™ëãÿ‘.

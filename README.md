@@ -717,6 +717,107 @@ collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최�
   
  5. Collector 인터페이스(다시보기)
  - Collector 인터페이스는 리듀싱 연산을 어떻게 구현할지 제공하는 메서드 집합으로 구성된다. 
+ 
+---
+## 병렬 데이터 처리와 성능(다시보기)
+1. 병렬 스트림
+- parallelStream을 호출하면 병렬 스트림이 생성된다. 
+- 병렬 스트림을 이용하면 모든 멀티코어 프로ㅔㅅ서가 각각의 청크를 처리하도록 할당 할 수 있다. 
+- 순차 스트림을 병렬 스트림으로 변환하기 
+  - 순차 스트림에 parallel을 호출해도 스트림 자체에는 아무 변화가 없다. 
+  - sequential로 병렬 스트림을 순차 스트림으로 바꿀 수 있다. 
+- 병렬 스트림은 내부적으로 ForkJoinPool을 사용한다.
+  - 프로세스 수가 스레드 수와 같다. 
+- 스트림 성능 측정
+  - 멀티코어 간 데이터 이동은 생각보다 비싸다.
+  - 코어 간에 데이터 전송 시간보다 오래 걸리는 작업만 병렬로 다른 코어에서 수행하는 것이 바람직하다. 
+- 병렬 스트림의 올바른 사용법
+  - 병렬 스트림을 사용했을 때 이상한 결과에 당황하지 않으려면 상태 공유에 따른 부작용을 피해야 한다.
+  - 공유된 가변 상태를 피하자. 
+- 병렬 스트림 효과적으로 사용하기
+  - 박싱을 주의하라
+  - 요소의 순서에 의존하는 연산을 병렬로 처리하면 비싼 비용이 든다. 
+    - findAny가 findFirst보다 성능이 더 좋다. 
+    - 소량의 데이터에서는 병렬 스트림이 도움이 안된다. 
+    - 최종 연산의 병합 과정 비용을 살펴보라. 
+  - 스트림 소스와 분해성
+    - ArrayList : 훌륭
+    - LinkedList : 나쁨
+    - IntStream.range : 훌륭
+    - Srream.iterate : 나쁨
+    - HashSet : 좋음
+    - TreeSet 좋음
+
+2. 포크/조인 프레임워크
+- 포크/조인 프레임워크는 병렬화할 수 있는 작업을 재귀적으로 작은 작업으로 분할한 다음 서브태스크 각각의 결과를 합쳐 전체 결과를 만든다. 
+- RecursiveTask 활용
+  - 스레드 풀을 이용하려면 RecursiveTask<R>의 서브클래스를 만들어야 한다. 
+  - compute를 구현해야 한다. 
+    - 태스크를 서브태스크로 분할하는 로직과 더 이상 분할 할 수 없을 때 개별 서브 태스크의 결과를 생산할 알고리즘을 정의한다.
+    ```java
+    public class ForkJoinSumCalculator extends RecursiveTask<Long> {
+        private final long[] numbers;
+        private final int start;
+        private final int end;
+        public static final long THRESHOLD = 10_000;
+    
+        public ForkJoinSumCalculator(long[] numbers) {
+            this(numbers, 0, numbers.length);
+        }
+    
+        public ForkJoinSumCalculator(long[] numbers, int start, int end) {
+            this.numbers = numbers;
+            this.start = start;
+            this.end = end;
+        }
+    
+        @Override
+        protected Long compute() {
+            int length = end - start;
+            if(length < THRESHOLD) {
+                return computeSequentially();
+            }
+            
+            ForkJoinSumCalculator leftTask = new ForkJoinSumCalculator(numbers, start, start + length/2);
+            leftTask.fork();  // 비동기로 실행
+    
+            ForkJoinSumCalculator rightTask = new ForkJoinSumCalculator(numbers, start + length/2, length/2);
+            
+            Long rightResult = rightTask.compute();  // 두 번째 task를 동기 실행. 추가 분할 발생 가능성 있음
+            Long leftResult = leftTask.join();  // 첫 번째 테스크의 결과를 읽거나 아직 결과가 없으면 기다림
+            
+            return leftResult + rightResult;
+        }
+    
+        private Long computeSequentially() {
+            long sum = 0;
+            for(int i = start; i < end; i++) {
+                sum +=numbers[i];
+            }
+            return sum;
+        }
+    }
+    ```
+  - 일반적으로 애플리케이션에서는 둘 이상의 ForkJoinPool을 사용하지 않는다. 싱글턴으로 저장해야 한다. 
+- 포크/조인 프레임워크를 제대로 사용하는 방법
+  - join 메서드를 태스크에 호출하면 태스크가 생산하는 결과가 준비될 때까지 호출자를 블록시킨다. 
+  - RecusiveTask 내에서는 ForkJoinPool의 invoke 메서드를 사용하지 말아햐 한다. 
+    - 대신 compute나 fork 메서드를 직접 호출할 수 있다. 
+    - 순차 코드에서 병렬 계산을 시작할 때만 invoke를 사용한다. 
+  - 서브테스크에 fork 메서드를 호출해 ForkJoinPool의 일정을 조절할 수 있다. 
+  - 디버깅 하기가 어렵다. 
+  - 순차처리보다 무조건 빠르다는 것은 버려야 한다. 
+- 작업 훔치기
+  - 작업 훔치기 기법에는 ForkJoinPool의 모든 스레드를 거의 공정하게 분할한다. 
+  
+3. Spliterator 인터페이스
+- 분할 할 수 있는 반복자란 뜻이다.
+- Iterator처럼 소스의 요소 탐색 기능을 제공하지만 병렬 작업에 특화되 있다.    
+- 분할 과정
+  - 스트림을 여러 스트림으로 분할하는 과정은 재귀적으로 일어난다. 
+  - 첫 Spliterator에 trySplit을 호출하면 두 번째 Spliterator가 생성된다. 
+  - trySplit이 null이 될 때까지 반복한다. 
+  
   
      
     

@@ -818,6 +818,36 @@ collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최�
   - 첫 Spliterator에 trySplit을 호출하면 두 번째 Spliterator가 생성된다. 
   - trySplit이 null이 될 때까지 반복한다. 
   
-  
+---
+# PART 3 스트림과 람다를 이용한 효과적 프로그래밍
+## 컬렉션 API 개선
+1. 컬렉션 팩토리
+- 자바 9에서는 작은 컬렉션 객체를 쉽게 만들 수 있는 방법을 제공한다. 
+  - Arrays.asList() 팩토리 메서드를 이용하면 된다. 
+  - 고정크기로 만들므로 요소를 갱신할 순 없지만 새 요소를 추가하거나 요소를 삭제할 순 있다. 
+  ```
+  List<String> friends = Arrays.asList("Sejin", "NamTack", "YongNam");
+  ```
+  - UnsupportedOperatationException 예외 발생
+    - 내부적으로 고정된 크기의 변환할 수 있는 배열로 구현되어 이 에러가 발생한다. 
+- 리스트 팩토리
+  - List.of 메서드로 간단하게 리스트를 만들 수 있다. 
+  - 만든 리스트에 뭔가를 추가하면 UnsupportedOperatioException이 발생한다. 
+  ```
+  List<String> friends = List.of("Sejin", "NamTack", "YongNam");
+  ```
+  - 의도치 않게 변경하는 것을 막을 수 있다. 요소 자체가 변하는 건 막을수 없지만.
+  - 데이터 처리 형식을 설정하거나 데이터를 변환할 필요가 없다면 사용하기 간편한 팩토리 메서드를 이용할 것을 권장한다. 
+- 집합 팩터리
+  - Set.of로 만들면 중복된 요소가 있을때 예외를 발생시킨다. 
+- 맵 팩토리
+  - 두 가지 방법이 있다.
+  - Map.of에 키와 값을 번갈아 제공하는 방법이 있다. 
+  ```
+  Map<String, Integer> ageofFriends = Map.of("Sejin", 31, "Peter", 35, "James", 29);
+  ```
+  - 위 방법은 열 개 이하의 값을 만들때 유용하다. 
+  - 열개 이상이면 Map.ofEntries 메서드를 이용하자. 
+
      
     

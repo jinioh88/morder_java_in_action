@@ -5,3 +5,5 @@ B
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 B
 src/ch06/Main.java,0\6\0631166492623d5249230a06910800fa1114dcd6
+S
+#src/ch07/ForkJoinSumCalculator.java,2\9\29ec76fb6bd1b74ac186d0744ec640cbc3dc5a87

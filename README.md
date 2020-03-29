@@ -848,6 +848,43 @@ collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최�
   ```
   - 위 방법은 열 개 이하의 값을 만들때 유용하다. 
   - 열개 이상이면 Map.ofEntries 메서드를 이용하자. 
+  
+2. 리스트와 집합 처리
+- 다음 메서드들은 메서드를 호출한 컬렉션 자체를 바꾼다. 
+- removeIf 메서드
+  - for문 안에서 List를 삭제할 때 반복자 상태가 컬렉션의 상태와 동기화 되지 않는 문제가 발생할 수 있다. 
+  - removeIf 메서드로 위문제를 해결할 수 있다. 
+  ```
+  friends.removeIf(f -> f.length() > 10
+  ```
+- replaceAll 메서드
+  - 리스트의 각 요소를 새로운 요소로 바꿀 수 있다. 
+- sort 메서드
+
+3. 맵 처리
+- forEach 메서드
+  - 기본엔 Map.Enty 반복자를 이용했지만 forEach를 이용하면 쉽게 구현된다.
+- 정렬 메서드
+  - Enty.comparingByValue
+  - Enty.comparingByKey 
+  - 위 두가지로 정렬할 수 있다. 
+- getOrDefault 메서드
+  - 기존엔 키가 존재 하지않으면 Exception이 발생했다.
+  - 위 문제를 기본값을 반환하도록 해결한 것이다. 
+- 계산 패턴
+  - computeIfAbsent: 제공된 키에 해당하는 값이 없으면 키를 이용해 새 값을 계산하고 맵에 추가한다.
+  - computeIfPresent: 제공된 키가 존재하면 새 값을 계산하고 맵에 추가
+  - compute: 제공된 키로 새 값을 계산하고 맵에 저장
+- 삭제 패턴
+  - remove(key, value);로 쉽게 삭제 할 수 있다. 
+- 교체 패턴
+  - replaceAll: 
+  - replace: 키가 존재하면 맵의 값을 바꿈. 
+  
+4. 개선된 ConcurrentHashMap
+- 동시성 친화적이며 최신 기술을 반영한 HashMap(비동기) 버전이다. 
+- 내부 자료구조의 특정 부분만 잠궈 동시 추가, 갱신 작업을 허용한다. 
+- 동기화된 Hashtable 버전에 비해 읽기 쓰기 연산 성능이 월등하다. 
 
      
     

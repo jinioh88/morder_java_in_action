@@ -8,6 +8,8 @@ public class Main {
     public static void main(String[] args) {
         List<String> friends = List.of("Sejin", "NamTack", "YongNam");
 
-        Map<String, Integer> ageofFriends = Map.of("Sejin", 31, "Peter", 35, "James", 29);
+        friends.removeIf(f -> f.length() > 10);
+
+        Map.of(1,"hi", 2, "hello").forEach();
     }
 }

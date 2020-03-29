@@ -10,6 +10,6 @@ public class Main {
 
         friends.removeIf(f -> f.length() > 10);
 
-        Map.of(1,"hi", 2, "hello").forEach();
+
     }
 }

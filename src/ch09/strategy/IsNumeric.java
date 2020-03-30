@@ -1,4 +1,4 @@
-package ch09;
+package ch09.strategy;
 
 public class IsNumeric implements ValidationStrategy {
     @Override

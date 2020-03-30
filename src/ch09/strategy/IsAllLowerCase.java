@@ -1,4 +1,4 @@
-package ch09;
+package ch09.strategy;
 
 public class IsAllLowerCase implements ValidationStrategy {
     @Override

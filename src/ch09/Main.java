@@ -1,6 +1,8 @@
 package ch09;
 
-import javax.swing.*;
+import ch09.strategy.IsAllLowerCase;
+import ch09.strategy.IsNumeric;
+import ch09.strategy.Validator;
 
 public class Main {
     public static void main(String[] args) {

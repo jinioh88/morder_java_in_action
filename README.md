@@ -990,7 +990,31 @@ collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최�
   - 위 코드는 중첩된 if가 추가된 반복 패턴 코드인 '깊은 의심'이다. 
   - 들여쓰기 수가 증가한다. 
   ```
-  
+  public String getCarInsuranceName(Person person) {
+          if(person != null) {
+              return "Unkown";
+          }
+          
+          Car car = person.getCar();
+          if(car != null) {
+              return "Unkown";
+          }
+          Insurance insurance = car.getInsurance();
+          if(insurance != null) {
+              return "Unkown";
+          }
+          
+          return insurance.getName();
+  }
   ```
+  - 위 코드도 네 개의 출구가 생겼기 때문에 좋지 않다. 
+  
+- Optional 클래스 소개
+  - Optional<Car> 형식은 이 값이 없을 수 있음을 명시적으로 보여준다. 
+  - 모든 참조를 Optional로 대치하는 것은 바람직하지 않다. 
+    - 보험회사는 반드시 이름을 가져야 하며 이름이 없는 보험회사를 발견했다면 예외를 처리하는 코드를 추가하는 것이 아니라 보험회사 이름이 없는 이유가 무엇인지 밝혀 문제를 해결해야 한다. 
+    
+- Optional 적용 패턴
+
      
     

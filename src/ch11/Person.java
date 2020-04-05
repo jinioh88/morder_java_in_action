@@ -1,22 +1,20 @@
 package ch11;
 
-public class Person {
-    private Car car;
+import java.util.Optional;
 
-    public Car getCar() {
+public class Person {
+    private Optional<Car> car;
+
+    public Optional<Car> getCar() {
         return car;
     }
 
     public String getCarInsuranceName(Person person) {
-        if(person != null) {
-            Car car = person.getCar();
-            if(car != null) {
-                Insurance insurance = car.getInsurance();
-                if(insurance != null) {
-                    return insurance.getName();
-                }
-            }
-        }
-        return "Unkown";
+
+        Optional<Car> car = person.getCar();
+
+        Optional<Insurance> insurance = car.get().getInsurance();
+
+        return insurance.get().getName();
     }
 }

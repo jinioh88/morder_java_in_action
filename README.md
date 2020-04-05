@@ -1009,12 +1009,58 @@ collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최�
   ```
   - 위 코드도 네 개의 출구가 생겼기 때문에 좋지 않다. 
   
-- Optional 클래스 소개
-  - Optional<Car> 형식은 이 값이 없을 수 있음을 명시적으로 보여준다. 
-  - 모든 참조를 Optional로 대치하는 것은 바람직하지 않다. 
-    - 보험회사는 반드시 이름을 가져야 하며 이름이 없는 보험회사를 발견했다면 예외를 처리하는 코드를 추가하는 것이 아니라 보험회사 이름이 없는 이유가 무엇인지 밝혀 문제를 해결해야 한다. 
+2. Optional 클래스 소개
+- Optional<Car> 형식은 이 값이 없을 수 있음을 명시적으로 보여준다. 
+- 모든 참조를 Optional로 대치하는 것은 바람직하지 않다. 
+  - 보험회사는 반드시 이름을 가져야 하며 이름이 없는 보험회사를 발견했다면 예외를 처리하는 코드를 추가하는 것이 아니라 보험회사 이름이 없는 이유가 무엇인지 밝혀 문제를 해결해야 한다. 
     
-- Optional 적용 패턴
-
-     
-    
+3. Optional 적용 패턴
+- Optional 객체 만들기
+  - 빈 Optional
+    - Optional.empty로 빈 객체를 얻을 수 있다. 
+  - null이 아닌 값으로 Optional 만들기
+    - Optional.of로 null이 아닌 값을 포함하는 객체를 만들 수 있다. 
+  - null 값으로 Optional 만들기
+    - Optional.ofNullable로 null값을 저정할 수 있는 Optional을 만들 수 있다.
+- 맵으로 Optional의 값을 추출하고 변환하기
+  - Optional은 map 메서드를 지원한다. 
+  - Optional이 값을 포함하면 map의 인수로 제공된 함수가 값을 바꾼다. 
+- flatMap으로 Optional 객체 연결
+  - 보통 인수로 받은 함수를 스트림의 각 요소에 적용하면 스트림의 스트림이 만들어진다.
+  - 그러나 flatMapt은 인수로 받은 함수를 적용해 생성된 각각의 스트림에서 콘텐츠만 남긴다.
+  ```
+  public String getCarInsuranceName(Optional<Person> person) {
+          return person.flatMap(Person::getCar)
+                  .flatMap(Car::getInsurance)
+                  .map(Insurance::getName).orElse("Unkown");
+  }
+  ```   
+  - null의 조건 분기 코드가 사라졌다!
+  - 호출 체친 중 어떤 메서드가 빈 Optional을 반환한다면 전체 결과로 빈 Optional을 반환하고 아니면 관련 값을 포함하는 Optiona을 반환한다. 
+-  도에인 모델에 Optional을 사용했을 때 데이터를 직렬화 할 수 없는 이유
+  - Optinoal의 용도는 선택형 반환값을 지원하는 것이라고 못 박았다.
+  - Optional 클래스는 필드 형식으로 사용할 것을 가정하지 않았으므로, Serializable 인터페이스를 구현하지 않는다. 
+  - 도메인 모델에 Optional을 사용하면 직렬화 모델을 사용하는 도구나 프레임워크에서 문제가 생길 수 있다. 
+  - 하지만 Optional을 사용해 도메인 모델을 구성하는 것이 바람직하다. 
+  - 직렬화 모델이 필요하다면 다음과 같이 Optional로 값을 반환받을 수 있는 메서드를 추가하자.
+    ```
+    public Optional<Car> getCarAsOptional() {
+            return Optional.ofNullable(car);
+    }
+    ```
+- Optional 스트림 조작
+  - 자바 9에서 Optional을 포함하는 스트림을 쉽게 처리할 수 있도록 메서드를 추가했다. 
+- 디폴트 액션과 Optional 언랩
+  - get()은 값을 읽는 가장 간단한 메서드면서 동시에 가장 안전하지 않다. 
+    - 값이 없으면 NoSuchElementException을 발생시킨다. 
+  - orElse를 이용하면 Optional이 값을 포함하지 않을 때 기본값을 제공할 수 있다. 
+  - orElseGet(Supplier<?extends T> other)은 orElse 메서드에 대응하는 게으른 버전의 메서드다. 
+    - Optional에 값이 없을때만 Supplier가 실행된다. 
+  - orElseThrow(Supplier<? extends X> exceptionSupplier)는 Optional이 비어있을 때 예외를 발생시킨다. 
+    - get과 비슷하지만 예외의 종류를 선택할 수 있다.
+  - ifPresent(Consumer<? super T> consumer)를 이용하면 값이 존재할 때 인수로 넘겨준 동작을 실행한다. 
+  - ifPresentorElse(Consumer<? super T> action, Runnable emptyAction)이 자바 9에 추가 됐다.
+    - Optional이 비었을 때 실행할 수 있는 Runnable을 인수로 받는다. 
+- 필터로 특정값 거르기
+  - filter 메서드로 거를 수 있다. 
+  - Optional 객체가 프레디케이트와 일치하면 그 값을 반환하고, 그렇지 않으면 빈 Optional 객체를 반환한다. 

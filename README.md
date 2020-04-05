@@ -958,6 +958,39 @@ collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최�
   - DSL의 카테고리를 구분하는 가장 흔한 방법은 내부 DSL과 외부 DSL을 나누는 것이다. 
   - 내부 DSL
     - 자바로 구현한 DSL을 위미한다. 
- 
+
+---
+# PART 4 매일 자바와 함께
+## null 대신 Optional 클래스
+1. 값이 없는 상황을 어떻게 처리할까?
+- 보수적인 자세로 NullPointerException 줄이기
+  - 대부분 null 확인 코드를 추ㄹ가해 예외 문제를 해결할 것이다. 
+  ```
+  public class Person {
+      private Car car;
+      
+      public Car getCar() {
+          return car;
+      }
+      
+      public String getCarInsuranceName(Person person) {
+          if(person != null) {
+              Car car = person.getCar();
+              if(car != null) {
+                  Insurance insurance = car.getInsurance();
+                  if(insurance != null) {
+                      return insurance.getName();
+                  }
+              }
+          }
+          return "Unkown";
+      }
+  }
+  ``` 
+  - 위 코드는 중첩된 if가 추가된 반복 패턴 코드인 '깊은 의심'이다. 
+  - 들여쓰기 수가 증가한다. 
+  ```
+  
+  ```
      
     

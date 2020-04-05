@@ -1064,3 +1064,25 @@ collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최�
 - 필터로 특정값 거르기
   - filter 메서드로 거를 수 있다. 
   - Optional 객체가 프레디케이트와 일치하면 그 값을 반환하고, 그렇지 않으면 빈 Optional 객체를 반환한다. 
+  
+4. Optional을 사용한 실용 예제
+- 잠재적으로 null이 될 수 있는 대상을 Optional로 감싸기
+  - 기존 맵의 방식을 다음처럼 바꿀 수 있다 .
+  ```
+  Optional<Object> value = Optional.ofNullable(map.get("key"));
+  ```
+  - null일 수 있는 값을 Optional로 안전하게 변환할 수 있다.
+- 예외와 Optional 클래스
+  ```
+  public static Optional<Integer> stringToInt(String s) {
+          try {
+              return Optional.of(Integer.parseInt(s));
+          } catch (NumberFormatException e) {
+              return Optional.empty();
+          }
+  }
+  ```
+- 기본형 Optional을 사용하지 말아햐 하는 이유
+  - Optional<Integer> 대산 OptionalInt를 반환할 수 있다. 
+  - Optional의 최대 요소 수는 한 개 이므로 Optional에서는 기본형 특화 클래스로 성능을 개선할 수 없다. 
+  - 기본형 특화 Optional 사용을 권장하지 않는다. 

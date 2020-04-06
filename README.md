@@ -1086,3 +1086,92 @@ collect도 다양한 요소 누적 방식을 인수로 받아 스트림을 최�
   - Optional<Integer> 대산 OptionalInt를 반환할 수 있다. 
   - Optional의 최대 요소 수는 한 개 이므로 Optional에서는 기본형 특화 클래스로 성능을 개선할 수 없다. 
   - 기본형 특화 Optional 사용을 권장하지 않는다. 
+  
+---
+## 새로운 날짜와 시간 API
+1. LocalDate, LocalTime, Instant, Duration, Period 클래스
+- LocalDate와 LocalTime 사용
+  - LocalDate 인스턴스는 시간을 제외한 날짜를 표현하는 불변 객체다. 
+  - 정적 팩토리 메서드 of로 만들 수 있다. 
+  - now는 시스템 시계의 정보를 이용해 현재 날짜 정보를 얻는다. 
+  - parse로 문자열을 LocalDate나 LocalTime을 만들 수 있다.
+    - parse에 DateTimeFormatter를 전달할 수도 있다. 
+  ```
+    LocalDate date = LocalDate.now();
+
+	int year  = date.getYear();
+
+	// ChronoField 사용방법
+	int year2 = date.get(ChronoField.YEAR);
+
+	LocalTime time = LocalTime.of(13, 45, 20);
+	int hour = time.getHour();
+
+	// 문자열로 만드는 방법 parse이용
+	LocalDate date2 = LocalDate.parse("2020-04-06");
+  ```
+- 날짜와 시간 조합
+  - LocalDateTime은 LocaDate와 LocaTime을 쌍으로 갖는 복합 클래스다.
+  - LocalDateTime에서 toLocalDate(), toLocalTime()으로 인스턴스를 추출할 수 있다. 
+  ```
+    LocalDateTime ldt = LocalDateTime.of(2020, Month.MARCH, 4, 12, 20, 0);
+    LocalDate ld = ldt.toLocalDate();
+    LocalTime lt = ldt.toLocalTime();  
+  ```
+- Instant 클래스: 기계의 날짜와 시간
+  - Java의 Instant 클래스에서 기계적인 관점에서 시간을 표현한다. (유닉스 에포크 시간 기준)
+  팩토리 메서드 ofEpochSecond에 초를 넘겨줘서 Instant 클래스 인스턴스를 만들 수 있다. 
+- Duration과 Period 정의
+  - LocalDate는 사람이 사용하도록, Instant는 기계가 사용하도록 만들어진 클래스로 두 인스턴스는 서로 혼합할 수 없다. 
+  - Duration 클래스는 초와 나노초로 시간 단위를 표현하므로 메서드에 LocalDate를 전달할 수 없다.
+  - 년, 월, 일로 시간을 표현할 때는 Period 클래스를 사용한다. 
+  ```
+    Duration threeMinutes = Duration.ofMinutes(3);
+    Duration threeMinutes2 = Duration.of(3, ChronoUnit.MINUTES);
+
+    Period tenDays = Period.ofDays(10);
+  ```
+
+2. 날짜 조정, 파싱, 포매팅
+- TemporalAdjusters 사용하기
+  - 다음 주 일요일, 돌아오는 평일 등 다양한 상황에서 사용할 수 있도록 TemporalAdjusters를 제공한다. 
+  ```
+    LocalDate date3 = date.with(nextOrSame(DayOfWeek.SUNDAY));
+    LocalDate date4 = date.with(lastDayOfMonth());
+  ```
+  - 필요한 기능이 없을때 커스텀도 할 수 있다. 
+  ```
+    public class NextWorkingDay implements TemporalAdjuster {
+
+        @Override
+        public Temporal adjustInto(Temporal temporal) {
+            DayOfWeek dow = DayOfWeek.of(temporal.get(ChronoField.DAY_OF_WEEK));
+            int dayToAdd = 1;
+            if(dow == DayOfWeek.FRIDAY)
+                dayToAdd = 3;
+            else if(dow == DayOfWeek.SATURDAY)
+                dayToAdd = 2;
+            
+            return temporal.plus(dayToAdd, ChronoUnit.DAYS);
+        }
+    }
+  ```
+- 날짜와 시간 객체 출력과 파싱
+  - DateTimeFormatter로 날짜나 시간을 특정 형식의 문자열로 만들 수 있다. 
+  ```
+  LocalDate date5 = LocalDate.parse("20200406", DateTimeFormatter.BASIC_ISO_DATE);
+  ```
+  - 기존 DateFormat과는 달리 DateTimeFormatter는 스레드에서 안전하게 사용할 수 있다. 
+  ```
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    LocalDate date6 = LocalDate.of(2020,4,6);
+    String formattedDate = date6.format(formatter);
+    LocalDate date7 = LocalDate.parse(formattedDate, formatter);
+  ```
+
+3. 다양한 시간대와 캘린더 활용 방법
+- 기존 TimeZone을 대체할 수 있는 ZoneId 클래스가 새롭게 등장했다. 이는 불변 클래스다.
+- 시간대 사용하기
+  - ZoneId의 getRules()를 이용해 해당 시간대의 규정을 획득할 수 있다. 
+
+---
